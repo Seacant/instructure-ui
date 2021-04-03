@@ -22,37 +22,4 @@
  * SOFTWARE.
  */
 
-const path = require('path')
-const baseConfig = require('@instructure/ui-webpack-config')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-
-const outputPath = path.resolve(__dirname, '__build__')
-
-module.exports = {
-  ...baseConfig,
-  entry: {
-    // main entry point
-    main: './src/index.js',
-    // Note: these entries have to keep these names so that old codepens still work
-    common: ['@instructure/ui-polyfill-loader!', 'react', 'react-dom'],
-    globals: './globals.js'
-  },
-  output: {
-    path: outputPath,
-    filename: '[name].[contenthash].js'
-  },
-  devServer: {
-    contentBase: outputPath,
-    host: '0.0.0.0'
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      chunks: ['main']
-    })
-  ],
-  optimization: {
-    usedExports: true
-  },
-  mode: 'production'
-}
+module.exports = require('@instructure/ui-stylelint-config')

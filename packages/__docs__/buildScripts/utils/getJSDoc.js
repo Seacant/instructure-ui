@@ -22,37 +22,44 @@
  * SOFTWARE.
  */
 
-const path = require('path')
-const baseConfig = require('@instructure/ui-webpack-config')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const jsdoc = require('jsdoc-api')
 
-const outputPath = path.resolve(__dirname, '__build__')
+module.exports = function getJSDoc(source, error) {
+  let doc = {}
+  try {
+    const sections = jsdoc
+      .explainSync({
+        configure: './jsdoc.config.json',
+        source
+      })
+      .filter((section) => {
+        return (
+          section.undocumented !== true &&
+          section.access !== 'private' &&
+          section.kind !== 'package'
+        )
+      })
+    const module =
+      sections.filter((section) => section.kind === 'module')[0] ||
+      sections[0] ||
+      {}
+    doc = {
+      ...module,
+      sections: sections
+        .filter((section) => section.longname !== module.longname)
+        .map((section) => {
+          const name = section.longname.replace(`${module.longname}.`, '')
+          return {
+            ...section,
+            id: name,
+            title: name
+          }
+        }),
+      undocumented: sections.length <= 0
+    }
+  } catch (err) {
+    error(err)
+  }
 
-module.exports = {
-  ...baseConfig,
-  entry: {
-    // main entry point
-    main: './src/index.js',
-    // Note: these entries have to keep these names so that old codepens still work
-    common: ['@instructure/ui-polyfill-loader!', 'react', 'react-dom'],
-    globals: './globals.js'
-  },
-  output: {
-    path: outputPath,
-    filename: '[name].[contenthash].js'
-  },
-  devServer: {
-    contentBase: outputPath,
-    host: '0.0.0.0'
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      chunks: ['main']
-    })
-  ],
-  optimization: {
-    usedExports: true
-  },
-  mode: 'production'
+  return doc
 }

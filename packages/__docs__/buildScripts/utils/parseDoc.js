@@ -23,36 +23,38 @@
  */
 
 const path = require('path')
-const baseConfig = require('@instructure/ui-webpack-config')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const getJSDoc = require('./getJSDoc')
+const getCodeDoc = require('./getCodeDoc')
+const getReactDoc = require('./getReactDoc')
+const getFrontMatter = require('./getFrontMatter')
 
-const outputPath = path.resolve(__dirname, '__build__')
+module.exports = function (resourcePath, source, errorHandler) {
+  const extension = path.extname(resourcePath)
 
-module.exports = {
-  ...baseConfig,
-  entry: {
-    // main entry point
-    main: './src/index.js',
-    // Note: these entries have to keep these names so that old codepens still work
-    common: ['@instructure/ui-polyfill-loader!', 'react', 'react-dom'],
-    globals: './globals.js'
-  },
-  output: {
-    path: outputPath,
-    filename: '[name].[contenthash].js'
-  },
-  devServer: {
-    contentBase: outputPath,
-    host: '0.0.0.0'
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: './src/index.html',
-      chunks: ['main']
-    })
-  ],
-  optimization: {
-    usedExports: true
-  },
-  mode: 'production'
+  let doc = {}
+
+  if (extension === '.md') {
+    doc = { description: source }
+  } else if (extension === '.js') {
+    // TODO: make the extension(s) here configurable
+    doc = getReactDoc(source, errorHandler)
+
+    if (!doc.props) {
+      doc = getJSDoc(source, errorHandler)
+    }
+  } else {
+    doc = getCodeDoc(source, errorHandler)
+  }
+
+  let frontMatter
+  try {
+    frontMatter = getFrontMatter(doc.description)
+  } catch (e) {
+    throw `Failed to parse YAML "${doc.description}" \nexception is \n${e}`
+  }
+
+  return {
+    ...doc,
+    ...frontMatter
+  }
 }

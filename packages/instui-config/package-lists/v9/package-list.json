@@ -37,8 +37,6 @@
   "@instructure/ui-date-input",
   "@instructure/ui-decorator",
   "@instructure/ui-dialog",
-  "@instructure/ui-docs-client",
-  "@instructure/ui-docs-plugin",
   "@instructure/ui-dom-utils",
   "@instructure/ui-drawer-layout",
   "@instructure/ui-editable",
