@@ -32,16 +32,15 @@ const processFile = require('./processFile')
 const fs = require('fs')
 
 const projectRoot = path.resolve(__dirname, '../../../')
-// eslint-disable-next-line instructure-ui/no-relative-package-imports
-const pkg = require('../../../package.json')
+const rootPackage = require(projectRoot + '/package.json') // root package.json
 
 const options = {
   projectRoot: projectRoot,
   library: {
-    name: pkg.name,
-    version: pkg.version,
-    repository: pkg.repository.url,
-    author: pkg.author,
+    name: rootPackage.name,
+    version: rootPackage.version,
+    repository: rootPackage.repository.url,
+    author: rootPackage.author,
     packages: 'packages',
     scope: '@instructure',
     codepen: {
@@ -49,11 +48,11 @@ const options = {
       // this is usually whatever webpack entries you've defined
       js_external: [
         // should match entries in webpack.config.js
-        `${pkg.homepage}vendors~common~globals~ui-docs.js`,
-        `${pkg.homepage}vendors~globals~ui-docs.js`,
-        `${pkg.homepage}runtime~common.js`,
-        `${pkg.homepage}common.js`,
-        `${pkg.homepage}globals.js`
+        `${rootPackage.homepage}vendors~common~globals~ui-docs.js`,
+        `${rootPackage.homepage}vendors~globals~ui-docs.js`,
+        `${rootPackage.homepage}runtime~common.js`,
+        `${rootPackage.homepage}common.js`,
+        `${rootPackage.homepage}globals.js`
       ].join(';')
     }
   },
