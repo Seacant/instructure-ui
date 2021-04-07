@@ -22,11 +22,14 @@
  * SOFTWARE.
  */
 
+const ENV = process.env.NODE_ENV || 'production'
+const DEBUG = process.env.DEBUG || ENV === 'development'
 const path = require('path')
 const baseConfig = require('@instructure/ui-webpack-config')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const outputPath = path.resolve(__dirname, '__build__')
+const resolveAliases = DEBUG ? { resolve: require('./resolve') } : {}
 
 module.exports = {
   ...baseConfig,
@@ -54,5 +57,6 @@ module.exports = {
   optimization: {
     usedExports: true
   },
+  ...resolveAliases,
   mode: 'production'
 }
