@@ -64,6 +64,7 @@ import { compileMarkdown } from '../compileMarkdown'
 import generateStyle from './styles'
 import generateComponentTheme from './theme'
 import { LoadingScreen } from '../LoadingScreen'
+import * as EveryComponent from '../../components'
 
 export const AppContext = createContext({
   library: {},
@@ -110,6 +111,12 @@ class App extends Component {
     fetch('./docs-data.json')
       .then((response) => response.json())
       .then((data) => {
+        for (const key of Object.keys(EveryComponent)) {
+          if (data.docs[key]) {
+            // eslint-disable-next-line no-param-reassign,import/namespace
+            data.docs[key].componentInstance = EveryComponent[key]
+          }
+        }
         this.setState({ docsData: data, themeKey: Object.keys(data.themes)[0] })
       })
       .catch((error) => {

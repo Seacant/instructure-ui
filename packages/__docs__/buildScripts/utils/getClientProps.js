@@ -59,13 +59,10 @@ function parseDocs(docs, library) {
 
       parsed.docs[id] = {
         ...doc,
-
         methods: doc.methods
           ? doc.methods.filter((method) => method.docblock !== null)
-          : undefined,
-        generateTheme: doc.resource && doc.resource.generateTheme
+          : undefined
       }
-
       if (describes) {
         parsed.descriptions[describes] = doc.description
       }

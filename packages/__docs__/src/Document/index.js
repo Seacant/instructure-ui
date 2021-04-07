@@ -99,7 +99,8 @@ class Document extends Component {
 
   renderTheme(doc) {
     const { themeVariables } = this.props
-    const generateComponentTheme = doc?.resource?.generateComponentTheme
+    const generateComponentTheme =
+      doc?.componentInstance?.generateComponentTheme
 
     const componentTheme =
       themeVariables &&
@@ -144,15 +145,8 @@ class Document extends Component {
   }
 
   renderUsage() {
-    const {
-      esPath,
-      id,
-      displayName,
-      packageName,
-      title,
-      resource
-    } = this.props.doc
-    const importName = displayName || resource.displayName || id
+    const { esPath, id, displayName, packageName, title } = this.props.doc
+    const importName = displayName || id
 
     let example = []
 
@@ -247,9 +241,7 @@ import { ${importName} } from '${esPath}'
   }
 
   hasDetails(doc) {
-    return (
-      doc.params || doc.returns || doc.methods || doc.props || doc.generateTheme
-    )
+    return doc.params || doc.returns || doc.methods || doc.props
   }
 
   render() {
@@ -316,7 +308,7 @@ import { ${importName} } from '${esPath}'
         {this.renderDescription(doc, this.props.description)}
         {details}
         {sections}
-        {doc.resource && this.renderUsage()}
+        {(doc.displayName || doc.id) && this.renderUsage()}
         {repository && layout !== 'small' && (
           <GithubCorner
             href={repository}

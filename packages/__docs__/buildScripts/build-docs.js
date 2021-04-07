@@ -128,10 +128,10 @@ const ignore = options.ignore.map((file) =>
 
 globby(files, { ignore })
   .then((matches) => {
-    const docs = matches.map((filepath) =>
+    const docs = matches.map((filepath) => {
       // loop trough every source and Readme file
-      processFile(filepath, options)
-    )
+      return processFile(filepath, options)
+    })
     const props = getClientProps(docs, themes, options.library)
     props.icons = icons
     props.showMenu = options.showMenu ? 'true' : 'false'

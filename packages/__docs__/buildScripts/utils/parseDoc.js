@@ -38,7 +38,6 @@ module.exports = function (resourcePath, source, errorHandler) {
   } else if (extension === '.js') {
     // TODO: make the extension(s) here configurable
     doc = getReactDoc(source, errorHandler)
-
     if (!doc.props) {
       doc = getJSDoc(source, errorHandler)
     }
@@ -46,7 +45,7 @@ module.exports = function (resourcePath, source, errorHandler) {
     doc = getCodeDoc(source, errorHandler)
   }
 
-  let frontMatter
+  let frontMatter // the YAML description in a JSDoc commment
   try {
     frontMatter = getFrontMatter(doc.description)
   } catch (e) {
