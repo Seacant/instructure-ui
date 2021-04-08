@@ -113,6 +113,7 @@ class App extends Component {
       .then((data) => {
         for (const key of Object.keys(EveryComponent)) {
           if (data.docs[key]) {
+            // this is used to calculate theme variable values for components
             // eslint-disable-next-line no-param-reassign,import/namespace
             data.docs[key].componentInstance = EveryComponent[key]
           }
