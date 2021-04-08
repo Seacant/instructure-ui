@@ -111,11 +111,22 @@ class App extends Component {
     fetch('./docs-data.json')
       .then((response) => response.json())
       .then((data) => {
+        // Assign the component instance to the parsed JSON.
+        // This is used to dynamically calculate theme variable values
         for (const key of Object.keys(EveryComponent)) {
+          // eslint-disable-next-line import/namespace
+          const Component = EveryComponent[key]
           if (data.docs[key]) {
-            // this is used to calculate theme variable values for components
-            // eslint-disable-next-line no-param-reassign,import/namespace
-            data.docs[key].componentInstance = EveryComponent[key]
+            // eslint-disable-next-line no-param-reassign
+            data.docs[key].componentInstance = Component
+          }
+          // Enumerate over the sub-components of a component, e.g. "List.Item"
+          for (const subKey of Object.keys(Component)) {
+            const subComponentId = `${key}.${subKey}`
+            if (data.docs[subComponentId]) {
+              // eslint-disable-next-line no-param-reassign
+              data.docs[subComponentId].componentInstance = Component[subKey]
+            }
           }
         }
         this.setState({ docsData: data, themeKey: Object.keys(data.themes)[0] })

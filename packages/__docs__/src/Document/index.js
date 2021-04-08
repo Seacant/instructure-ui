@@ -308,7 +308,7 @@ import { ${importName} } from '${esPath}'
         {this.renderDescription(doc, this.props.description)}
         {details}
         {sections}
-        {doc.componentInstance && this.renderUsage()}
+        {doc.extension === '.js' && this.renderUsage()}
         {repository && layout !== 'small' && (
           <GithubCorner
             href={repository}

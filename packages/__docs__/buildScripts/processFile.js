@@ -68,6 +68,7 @@ function getDocId(docData, context, fullPath) {
 
   const lowerPath = relativePath.toLowerCase()
   if (id) {
+    // exist if it was in the description at the top
     docId = id
   } else if (lowerPath.includes('/index.js')) {
     docId = path.basename(context) // return its folder name
