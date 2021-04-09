@@ -108,9 +108,9 @@ const options = {
   icons: {
     packageName: '@instructure/ui-icons',
     formats: {
-      React: '@instructure/ui-icons/lib',
-      SVG: '@instructure/ui-icons/lib/svg',
-      Font: '@instructure/ui-icons/lib/font'
+      React: '',
+      SVG: 'svg',
+      Font: 'font'
     }
   }
 }
@@ -160,7 +160,9 @@ function parseThemes(themes = []) {
 function parseIcons(icons = {}) {
   const formats = {}
   Object.keys(icons.formats).map((format) => {
-    const requirePath = icons.formats[format]
+    const pathEnd =
+      icons.formats[format].length > 0 ? '/' + icons.formats[format] : ''
+    const requirePath = icons.packageName + '/lib' + pathEnd
     let glyphs = require(requirePath)
     if (format === 'React') {
       const formats = {}
@@ -180,7 +182,7 @@ function parseIcons(icons = {}) {
       format: format,
       glyphs: glyphs,
       packageName: packageName,
-      requirePath: requirePath
+      requirePath: icons.packageName + '/es' + pathEnd
     }
   })
   return {
