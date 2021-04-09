@@ -121,7 +121,7 @@ class App extends Component {
             data.docs[key].componentInstance = Component
           }
           // Enumerate over the sub-components of a component, e.g. "List.Item"
-          for (const subKey of Object.keys(Component)) {
+          for (const subKey of this.getAllPropNames(Component)) {
             const subComponentId = `${key}.${subKey}`
             if (data.docs[subComponentId]) {
               // eslint-disable-next-line no-param-reassign
@@ -135,6 +135,34 @@ class App extends Component {
         // eslint-disable-next-line no-console
         console.error('Unable to load docs data :(\n' + error)
       })
+  }
+
+  /**
+   * Get every static prop from an object (inherited ones too)
+   * @param object The object to check
+   * @returns {Set<string>} the properties
+   */
+  getAllPropNames(object) {
+    let obj = object
+    const props = new Set()
+    // exclude some common static props for performance
+    const invalidKeys = [
+      '$$typeof',
+      'render',
+      'propTypes',
+      'selector',
+      'defaultProps',
+      'displayName',
+      'generateComponentTheme'
+    ]
+    while (obj) {
+      let keys = Object.keys(obj)
+      keys.forEach((k) => {
+        if (!invalidKeys.includes(k)) props.add(k)
+      })
+      obj = Reflect.getPrototypeOf(obj)
+    }
+    return props
   }
 
   componentDidMount() {

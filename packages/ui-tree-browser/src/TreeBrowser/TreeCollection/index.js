@@ -40,6 +40,7 @@ import generateComponentTheme from './theme'
 /**
 ---
 parent: TreeBrowser
+id: TreeBrowser.Collection
 ---
 **/
 
